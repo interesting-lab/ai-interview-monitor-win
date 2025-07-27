@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Native WebSocket Test</title>
+</head>
+<body>
+    <h1>Native WebSocket Connection Test</h1>
+    <div id="status">Connecting...</div>
+    <div id="messages"></div>
+    <button onclick="sendTestMessage()">Send Test Message</button>
+    
+    <script>
+        let socket;
+        
+        function connect() {
+            socket = new WebSocket("ws://172.16.58.135:9047/ws");
+            
+            socket.onopen = function(event) {
+                document.getElementById("status").innerHTML = "Connected!";
+                console.log("WebSocket connected");
+            };
+            
+            socket.onmessage = function(event) {
+                const messagesDiv = document.getElementById("messages");
+                const data = JSON.parse(event.data);
+                messagesDiv.innerHTML += "<div>" + new Date().toLocaleTimeString() + ": " + JSON.stringify(data, null, 2) + "</div>";
+                console.log("Received:", data);
+            };
+            
+            socket.onclose = function(event) {
+                document.getElementById("status").innerHTML = "Disconnected";
+                console.log("WebSocket closed", event);
+            };
+            
+            socket.onerror = function(error) {
+                document.getElementById("status").innerHTML = "Error: " + error;
+                console.error("WebSocket error:", error);
+            };
+        }
+        
+        function sendTestMessage() {
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                const testMessage = {
+                    id: "test-" + Date.now(),
+                    payload: {},
+                    type: null,
+                    wsEventType: "test-audio-command"
+                };
+                
+                socket.send(JSON.stringify(testMessage));
+                console.log("Sent test message");
+            } else {
+                console.log("WebSocket not connected");
+            }
+        }
+        
+        // 自动连接
+        connect();
+    </script>
+</body>
+</html>

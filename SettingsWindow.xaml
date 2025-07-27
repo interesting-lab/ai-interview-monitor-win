@@ -1,0 +1,82 @@
+<Window x:Class="AudioCaptureApp.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="设置" Height="400" Width="500"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+    
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <TextBlock Grid.Row="0" Text="应用程序设置" FontSize="18" FontWeight="Bold" Margin="0,0,0,20"/>
+        
+        <TabControl Grid.Row="1">
+            <TabItem Header="快捷键设置">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0" Text="配置全局快捷键" FontWeight="Bold" Margin="0,0,0,15"/>
+                    
+                    <Grid Grid.Row="1" Margin="0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="80"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Column="0" Text="截图快捷键:" VerticalAlignment="Center"/>
+                        <TextBox Grid.Column="1" x:Name="ScreenshotHotkeyTextBox" 
+                                 Margin="5,0" VerticalAlignment="Center" IsReadOnly="True"/>
+                        <Button Grid.Column="2" Content="设置" x:Name="SetScreenshotHotkeyButton" 
+                                Click="SetScreenshotHotkey_Click" Margin="5,0"/>
+                    </Grid>
+                    
+                    <Grid Grid.Row="2" Margin="0,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="80"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Grid.Column="0" Text="键盘事件快捷键:" VerticalAlignment="Center"/>
+                        <TextBox Grid.Column="1" x:Name="KeydownEventHotkeyTextBox" 
+                                 Margin="5,0" VerticalAlignment="Center" IsReadOnly="True"/>
+                        <Button Grid.Column="2" Content="设置" x:Name="SetKeydownEventHotkeyButton" 
+                                Click="SetKeydownEventHotkey_Click" Margin="5,0"/>
+                    </Grid>
+                    
+                    <TextBlock Grid.Row="3" Text="说明：" FontWeight="Bold" Margin="0,20,0,5"/>
+                    <TextBlock Grid.Row="4" TextWrapping="Wrap" Margin="0,0,0,10">
+                        <Run Text="• 截图快捷键：触发截图并发送到WebSocket客户端"/>
+                        <LineBreak/>
+                        <Run Text="• 键盘事件快捷键：发送键盘事件到WebSocket客户端"/>
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Run Text="支持的修饰键：Ctrl, Shift, Alt"/>
+                        <LineBreak/>
+                        <Run Text="支持的按键：A-Z, F1-F12, Space, Enter"/>
+                        <LineBreak/>
+                        <Run Text="格式示例：Ctrl+Shift+F12, Alt+A"/>
+                    </TextBlock>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button Content="保存" x:Name="SaveButton" Click="Save_Click" 
+                    Width="80" Height="30" Margin="0,0,10,0"/>
+            <Button Content="取消" x:Name="CancelButton" Click="Cancel_Click" 
+                    Width="80" Height="30"/>
+        </StackPanel>
+    </Grid>
+</Window>
