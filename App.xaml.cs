@@ -10,6 +10,7 @@ namespace AudioCaptureApp
     public partial class App : Application
     {
         private IHost? _host;
+        private MainWindow? _mainWindow;
         public IServiceProvider? ServiceProvider { get; private set; }
 
         protected override async void OnStartup(StartupEventArgs e)
@@ -42,8 +43,8 @@ namespace AudioCaptureApp
                 Console.WriteLine("Web服务器正在运行在 http://0.0.0.0:9047");
                 
                 // 显示主窗口
-                var mainWindow = new MainWindow();
-                mainWindow.Show();
+                _mainWindow = new MainWindow();
+                _mainWindow.Show();
             }
             catch (Exception ex)
             {
@@ -68,6 +69,21 @@ namespace AudioCaptureApp
             }
             
             base.OnExit(e);
+        }
+
+        // 提供一个方法来激活主窗口（如果需要的话）
+        public void ActivateMainWindow()
+        {
+            if (_mainWindow != null)
+            {
+                if (_mainWindow.WindowState == WindowState.Minimized)
+                {
+                    _mainWindow.WindowState = WindowState.Normal;
+                }
+                _mainWindow.Activate();
+                _mainWindow.Topmost = true;
+                _mainWindow.Topmost = false;
+            }
         }
     }
 }

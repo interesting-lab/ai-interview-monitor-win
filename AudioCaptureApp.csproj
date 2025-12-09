@@ -14,6 +14,9 @@
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <StartupObject>AudioCaptureApp.Program</StartupObject>
     
+    <!-- 应用图标配置 -->
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+    
     <!-- 兼容 Windows Forms 的优化配置 -->
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
     <DebuggerSupport>false</DebuggerSupport>
@@ -35,6 +38,11 @@
     <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
     <PackageReference Include="System.Management" Version="8.0.0" />
+  </ItemGroup>
+
+  <!-- 将图标文件作为资源嵌入 -->
+  <ItemGroup>
+    <Resource Include="icon.ico" />
   </ItemGroup>
 
   <!-- 排除不需要的文件 -->

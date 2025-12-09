@@ -70,13 +70,22 @@ namespace AudioCaptureApp
             try
             {
                 // 设置窗口图标
-                Icon = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/icon.ico"));
+                var iconUri = new Uri("pack://application:,,,/icon.ico");
+                var iconBitmap = new System.Windows.Media.Imaging.BitmapImage(iconUri);
+                Icon = iconBitmap;
+                
+                // 设置托盘图标
+                if (TrayIcon != null)
+                {
+                    TrayIcon.IconSource = iconBitmap;
+                }
             }
-            catch 
-            { 
-                // 忽略图标加载错误
+            catch (Exception ex)
+            {
+                // 如果图标加载失败，记录错误但不影响程序运行
+                LogTextBox?.AppendText($"[{DateTime.Now:HH:mm:ss}] 图标加载失败: {ex.Message}\n");
             }
-
+        
             // 最小化到系统托盘
             StateChanged += MainWindow_StateChanged;
             
@@ -87,6 +96,14 @@ namespace AudioCaptureApp
                 {
                     DragMove();
                 }
+            };
+            
+            // 添加窗口激活支持
+            Activated += (s, e) =>
+            {
+                // 当窗口被激活时，确保它在前台
+                Topmost = true;
+                Topmost = false;
             };
             
             // 添加未处理异常处理

@@ -7,7 +7,7 @@ namespace AudioCaptureApp
     public partial class SettingsWindow : Window
     {
         private readonly ConfigService _configService;
-        private AppConfig _currentConfig;
+        private AppConfig _currentConfig = null!; // 使用 null! 表示会在构造函数中初始化
         private bool _isCapturingScreenshotHotkey = false;
         private bool _isCapturingKeydownEventHotkey = false;
 

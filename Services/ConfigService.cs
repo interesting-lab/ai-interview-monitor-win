@@ -19,7 +19,7 @@ namespace AudioCaptureApp.Services
     public class ConfigService
     {
         private readonly string _configPath;
-        private AppConfig _config;
+        private AppConfig _config = null!; // 使用 null! 表示会在构造函数中初始化
 
         public ConfigService()
         {

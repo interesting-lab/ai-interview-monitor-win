@@ -143,10 +143,43 @@ namespace AudioCaptureApp.Controllers
         public IActionResult GetRoot()
         {
             LogError("Root endpoint called");
-            var html = @"
+            var isHttpsOr9048 = HttpContext.Request.IsHttps || HttpContext.Request.Host.Port == 9048;
+            var html = isHttpsOr9048 
+                ? @"
 <!DOCTYPE html>
-<html>
+<html lang=""zh-CN"">
 <head>
+    <meta charset=""UTF-8"">
+    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+    <title>证书安装成功</title>
+    <style>
+        body { margin:0; background:#f7f7f7; font-family: 'Segoe UI', 'Helvetica Neue', Arial, 'Microsoft YaHei', sans-serif; color:#111; }
+        .container { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:40px; box-sizing:border-box; }
+        .card { background:#fff; padding:56px 64px; border-radius:18px; box-shadow:0 24px 60px rgba(0,0,0,0.08); text-align:center; max-width:520px; width:100%; }
+        h1 { margin:0 0 16px; font-size:28px; font-weight:700; }
+        .subtitle { margin:0 0 32px; font-size:16px; color:#4a4a4a; }
+        .btn { display:inline-block; margin-top:4px; padding:14px 36px; background:#111; color:#fff; border-radius:999px; font-size:16px; font-weight:600; text-decoration:none; transition:background 0.2s ease, transform 0.2s ease; }
+        .btn:hover { background:#000; transform:translateY(-1px); }
+        .note { margin-top:24px; font-size:13px; color:#7a7a7a; }
+    </style>
+</head>
+<body>
+    <div class=""container"">
+        <div class=""card"">
+            <h1>证书安装成功</h1>
+            <p class=""subtitle"">拾间局域网服务已可用</p>
+            <a class=""btn"" href=""#"">我知道了</a>
+            <div class=""note"">若点击上方按钮无反应，可直接手动关闭此页面</div>
+        </div>
+    </div>
+</body>
+</html>"
+                : @"
+<!DOCTYPE html>
+<html lang=""en"">
+<head>
+    <meta charset=""UTF-8"">
+    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
     <title>Audio Capture Service</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 40px; }
@@ -170,10 +203,11 @@ namespace AudioCaptureApp.Controllers
             <li>Primary: " + AppContext.BaseDirectory + @"AudioCaptureApp.log</li>
             <li>Fallback: " + Path.GetTempPath() + @"AudioCaptureApp.log</li>
         </ul>
+        <p><strong>Tip:</strong> Access <a href=""https://localhost:9048"" target=""_blank"">https://localhost:9048</a> to verify HTTPS certificate.</p>
     </div>
 </body>
 </html>";
-            return Content(html, "text/html");
+            return Content(html, "text/html; charset=utf-8");
         }
     }
 }

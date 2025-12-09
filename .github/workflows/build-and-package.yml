@@ -1,0 +1,71 @@
+name: Build and Package
+
+on:
+  push:
+    branches: [main, master]
+    tags:
+      - "v*"
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      DOTNET_NOLOGO: true
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+      DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.nuget/packages
+            ~/.nuget/plugins-cache
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build AudioCaptureApp.csproj --configuration Release --no-restore
+
+      - name: Publish self-contained single-file app
+        run: >
+          dotnet publish AudioCaptureApp.csproj
+          --configuration Release
+          --runtime win-x64
+          --self-contained true
+          --output publish
+          /p:PublishSingleFile=true
+          /p:IncludeNativeLibrariesForSelfExtract=true
+          /p:EnableCompressionInSingleFile=true
+          /p:PublishReadyToRun=false
+          /p:EnableWindowsTargeting=true
+
+      - name: Create zip artifact
+        shell: pwsh
+        run: |
+          $zipPath = Join-Path $PWD "AudioCaptureApp-win-x64.zip"
+          if (Test-Path $zipPath) { Remove-Item $zipPath }
+          Compress-Archive -Path (Join-Path $PWD "publish" "*") -DestinationPath $zipPath
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AudioCaptureApp-win-x64
+          path: AudioCaptureApp-win-x64.zip
+          if-no-files-found: error
+
